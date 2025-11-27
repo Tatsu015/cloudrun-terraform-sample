@@ -1,13 +1,19 @@
 #!/bin/bash -e
 
-read -p "project name:" PROJECT_NAME
-read -p "project id:" PROJECT_ID
-read -p "billing account id:" BILLING_ACCOUNT
-read -p "GCS region:" GCS_REGION
+echo "setup GCP cloudrun resources."
+echo "please input values"
+echo "============================="
+
+read -p "project name: " PROJECT_NAME
+read -p "project id (Global unique value): " PROJECT_ID
+read -p "billing account id: " BILLING_ACCOUNT
+read -p "GCS region: " GCS_REGION
 
 SERVICE_ACCOUNT_NAME="terraform-runner"
 SERVICE_ACCOUNT_KEY_FILE_NAME=${SERVICE_ACCOUNT_NAME}-key.json
 GCS_BUCKET_NAME=gs://${PROJECT_ID}-tfstate
+
+echo "login to Google"
 
 gcloud auth login
 gcloud projects create ${PROJECT_ID} --name=${PROJECT_NAME}
@@ -27,3 +33,7 @@ gcloud iam service-accounts keys create ${SERVICE_ACCOUNT_KEY_FILE_NAME} --iam-a
 gcloud storage buckets create ${GCS_BUCKET_NAME} --project ${PROJECT_ID} --location ${GCS_REGION} --uniform-bucket-level-access
 
 gcloud storage buckets add-iam-policy-binding ${GCS_BUCKET_NAME} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/storage.admin"
+
+echo "==============================="
+echo "finish to create GCP resources!"
+echo "==============================="
