@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/bin/bash -e
 
 read -p "project name:" PROJECT_NAME
 read -p "project id:" PROJECT_ID
 read -p "billing account id:" BILLING_ACCOUNT
 read -p "GCS region:" GCS_REGION
 
-SERVICE_ACCOUNT_NAME = "terraform-runner"
-SERVICE_ACCOUNT_KEY_FILE_NAME = ${SERVICE_ACCOUNT_NAME}-key.json
-GCS_BUCKET_NAME = gs://${PROJECT_ID}-tfstate
+SERVICE_ACCOUNT_NAME="terraform-runner"
+SERVICE_ACCOUNT_KEY_FILE_NAME=${SERVICE_ACCOUNT_NAME}-key.json
+GCS_BUCKET_NAME=gs://${PROJECT_ID}-tfstate
 
 gcloud auth login
 gcloud projects create ${PROJECT_ID} --name=${PROJECT_NAME}
