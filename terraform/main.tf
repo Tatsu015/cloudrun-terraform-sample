@@ -16,8 +16,9 @@ resource "google_artifact_registry_repository" "cloudrun-terraform-sample" {
 }
 
 resource "google_cloud_run_v2_service" "service" {
-  name     = var.project_name
-  location = var.region
+  name                = var.project_name
+  location            = var.region
+  deletion_protection = var.deletion_protection
   template {
     containers {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
@@ -39,7 +40,7 @@ resource "google_cloud_scheduler_job" "job" {
 
   http_target {
     http_method = "POST"
-    uri         = "https://example.com/"
+    uri         = "https://example.com/" # todo change to cloudrun URL
     body        = base64encode("{}")
     headers = {
       "Content-Type" = "application/json"
