@@ -23,19 +23,21 @@ gcloud projects create ${PROJECT_ID} --name=${PROJECT_NAME}
 gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ACCOUNT}
 
 # api enablee
-gcloud services enable run.googleapis.com --project=${PROJECT_ID}
-gcloud services enable iam.googleapis.com --project=${PROJECT_ID}
-gcloud services enable cloudscheduler.googleapis.com --project=${PROJECT_ID}
+SERVICES=("run.googleapis.com" "iam.googleapis.com" "cloudscheduler.googleapis.com")
+
+for service in "${SERVICES[@]}"; do
+    gcloud services enable "${service}" --project="${PROJECT_ID}"
+done
 
 # create service account
 gcloud iam service-accounts create ${SERVICE_ACCOUNT_NAME} --display-name "${SERVICE_ACCOUNT_NAME}" --project ${PROJECT_ID}
 
 # add policy
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/run.admin"
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/storage.admin"
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/iam.serviceAccountUser"
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/artifactregistry.admin"
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/cloudscheduler.admin"
+ROLES=("roles/run.admin" "roles/storage.admin" "roles/iam.serviceAccountUser" "roles/artifactregistry.admin" "roles/cloudscheduler.admin")
+
+for role in "${ROLES[@]}"; do
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "${role}"
+done
 
 # create key file
 gcloud iam service-accounts keys create ${SERVICE_ACCOUNT_KEY_FILE_NAME} --iam-account ${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
