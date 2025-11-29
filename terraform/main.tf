@@ -14,3 +14,19 @@ resource "google_artifact_registry_repository" "cloudrun-terraform-sample" {
   description   = "sample repository"
   format        = "Docker"
 }
+
+resource "google_cloud_run_v2_service" "service" {
+  name     = var.project_name
+  location = var.region
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+  }
+  lifecycle {
+    ignore_changes = [
+      # ignore because container updated by CI/CD gcloud command.
+      template[0].containers[0].image
+    ]
+  }
+}
