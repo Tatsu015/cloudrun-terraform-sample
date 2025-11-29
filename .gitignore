@@ -36,5 +36,11 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# key file
+*-key.json
+
 # golang
 bin/
+
+# other
+tmp/
