@@ -24,12 +24,14 @@ gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ACCO
 
 gcloud services enable run.googleapis.com --project=${PROJECT_ID}
 gcloud services enable iam.googleapis.com --project=${PROJECT_ID}
+gcloud services enable cloudscheduler.googleapis.com --project=${PROJECT_ID}
 
 gcloud iam service-accounts create ${SERVICE_ACCOUNT_NAME} --display-name "${SERVICE_ACCOUNT_NAME}" --project ${PROJECT_ID}
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/run.admin"
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/storage.admin"
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/iam.serviceAccountUser"
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/artifactregistry.admin"
+gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --role "roles/cloudscheduler.admin"
 
 gcloud iam service-accounts keys create ${SERVICE_ACCOUNT_KEY_FILE_NAME} --iam-account ${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
 gcloud storage buckets create ${GCS_BUCKET_NAME} --project ${PROJECT_ID} --location ${GCS_REGION} --uniform-bucket-level-access

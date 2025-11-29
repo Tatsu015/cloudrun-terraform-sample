@@ -30,3 +30,19 @@ resource "google_cloud_run_v2_service" "service" {
     ]
   }
 }
+
+resource "google_cloud_scheduler_job" "job" {
+  name             = var.project_name
+  schedule         = "0 0 * * *"
+  time_zone        = "Asia/Tokyo"
+  attempt_deadline = "60s"
+
+  http_target {
+    http_method = "POST"
+    uri         = "https://example.com/"
+    body        = base64encode("{}")
+    headers = {
+      "Content-Type" = "application/json"
+    }
+  }
+}
